@@ -1,11 +1,29 @@
+# Healthy Living Abu Dhabi
 
-  # Health and Wellness Dashboard
+This is the exact website published at https://healthyliving.figma.site.
 
-  This is a code bundle for Health and Wellness Dashboard. The original project is available at https://www.figma.com/design/0u7MBxIQmWffRZq5ubseeG/Health-and-Wellness-Dashboard.
+Source Figma file: https://www.figma.com/design/0u7MBxIQmWffRZq5ubseeG/Health-and-Wellness-Dashboard
 
-  ## Running the code
+## Run locally
 
-  Run `npm i` to install the dependencies.
+```bash
+npm install
+npm run dev
+```
 
-  Run `npm run dev` to start the development server.
+Build:
+
+```bash
+npm run build
+```
+
+Output folder: `dist`
+
+## Give this to Base44
+
+Do not import the Cursor branch directly. Use `BASE44_HANDOFF.md`.
+
+Public GitHub repo:
+
+https://github.com/zoyashahid2492-cloud/HealthAndWellnessDashboard
   
