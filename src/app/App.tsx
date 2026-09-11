@@ -2,8 +2,8 @@ import type { LucideIcon } from "lucide-react";
 import { ArrowRight, Leaf, Search, ShieldCheck, Sprout } from "lucide-react";
 
 const LOGO_URL = "https://healthyliving.abudhabi/wp-content/uploads/2025/12/cropped-logo.png";
-const IMG_HERO = "https://healthyliving.abudhabi/wp-content/uploads/2025/12/hero-bg-3.png";
-const IMG_WALK = "https://healthyliving.abudhabi/wp-content/uploads/2026/02/5a782eeafcf85327081d87e6ee59047151b61e1e-scaled.webp";
+const IMG_HERO = "https://healthyliving.abudhabi/wp-content/uploads/2025/12/911eaeffcf59b39142cc7e2f3fad1086fd10d771-scaled.png";
+const IMG_WALK = "/generated/movement-reference.jpg";
 
 const navItems = ["How we live", "Who we help", "Global & Research", "HealthyLiving AI", "Resources"];
 const filterGroups = [
@@ -131,10 +131,7 @@ function ImageStatement() {
   return (
     <section className="statement">
       <img src={IMG_WALK} alt="A woman walking on Abu Dhabi's waterfront skyline" />
-      <div className="statement__scrim" />
-      <Logo light />
-      <p>Healthy living, shaped around real life.</p>
-      <div className="statement__letters" aria-hidden="true">MOVEMENT</div>
+      <span className="sr-only">Healthy living, shaped around real life. Movement.</span>
     </section>
   );
 }
