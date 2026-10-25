@@ -49,9 +49,8 @@ export class WorkshopPuzzle implements Puzzle {
   }
 
   late(dt: number): void {
-    if (this.cogTaken) return
     tryPush(this.block, this.api.pebble, this.api.pip, dt)
-    if (this.cogCovered() && this.nearBlock(this.api.pebble) && !this.api.pebble.input.abilityHeld) {
+    if (!this.cogTaken && this.cogCovered() && this.nearBlock(this.api.pebble) && !this.api.pebble.input.abilityHeld) {
       this.api.pebble.hintText = this.api.pebble.hintText || 'Hold Enter to push'
     }
     if (this.nearBlock(this.api.pip)) this.api.pip.hintText = this.api.pip.hintText || 'Jump over'
@@ -85,6 +84,7 @@ export class WorkshopPuzzle implements Puzzle {
     if (this.done) return 'The firefly is glowing.'
     if (this.lensIn && this.cogIn) return 'Both hold your ability buttons to mend the firefly. You can start at different moments.'
     if (this.lensIn || this.cogIn) return 'One piece is in. Carry the other to the socket with the same shape.'
+    if (this.lensTaken || this.cogTaken) return 'Carry each piece to the socket with the same shape.'
     return 'Pip, jump up for the teal lens. Pebble, push the block aside and take the amber cog.'
   }
 
@@ -123,6 +123,7 @@ export class WorkshopPuzzle implements Puzzle {
     if (!this.cogTaken && !this.cogCovered() && pebble.mode === 'play' && pebble.carrying !== 'cog' && this.nearCog(pebble)) {
       pebble.carrying = 'cog'
       this.cogTaken = true
+      this.clearOfBlock(pebble)
       audio.click()
       burst(this.api.scene, LAYOUT.cogX, FLOOR_Y - 20, COLORS.pebble)
       showToast('Pebble has the cog.')
@@ -214,6 +215,15 @@ export class WorkshopPuzzle implements Puzzle {
 
   private nearCogSocket(p: Player): boolean {
     return p.isGrounded() && Math.abs(p.y - FLOOR_Y) < 24 && Math.abs(p.x - LAYOUT.cogSocketX) < 48 + p.tune().pad
+  }
+
+  /** Keep a carrier from being squeezed inside the crate when they pick the cog up. */
+  private clearOfBlock(pebble: Player): void {
+    const left = this.block.rect.x
+    const right = left + this.block.w
+    if (pebble.x < left - pebble.halfW - 4 || pebble.x > right + pebble.halfW + 4) return
+    const spot = pebble.x < left + this.block.w / 2 ? left - pebble.halfW - 8 : right + pebble.halfW + 8
+    pebble.place(spot, pebble.y, 0, 0)
   }
 
   private cogCovered(): boolean {

@@ -134,7 +134,7 @@ export const LEVEL = {
     lensX: 2700,
     cogX: 2890,
     block: { x: 2820, y: FLOOR_Y - 64, w: 96, h: 64, minX: 2760, maxX: 3070 },
-    cogSocketX: 2720,
+    cogSocketX: 3288,
     socketStep: { x: 3388, y: 580, w: 160, h: 20 },
     lensSocket: { x: 3488, y: 448, w: 200, h: 20 },
     lensSocketX: 3590,

@@ -226,7 +226,9 @@ export class ElevatorPuzzle implements Puzzle {
     }
 
     if (this.phase === 'bottom' && this.latched) {
-      const waiting = [this.api.pip, this.api.pebble].some((p) => this.onPad(p))
+      const waiting = [this.api.pip, this.api.pebble].some(
+        (p) => this.onPad(p) && Math.abs(p.body.velocity.x) < 40,
+      )
       this.padDwell = waiting ? this.padDwell + dt : 0
       if (this.padDwell > 0.28) {
         this.padDwell = 0
