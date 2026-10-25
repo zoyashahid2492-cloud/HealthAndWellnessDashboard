@@ -289,13 +289,16 @@ export class PlayScene extends Phaser.Scene {
     }
   }
 
-  /** Book-step ledges only catch feet coming down onto the top, so jumps are not snagged. */
+  /** Shelves catch feet that cross the top on the way down, including a long frame. */
   private landOnLedge(player: Player, ledge: unknown): boolean {
     if (player.body.velocity.y < -30) return false
     const rect = ledge as Phaser.GameObjects.Rectangle
     const top = (rect.body as Phaser.Physics.Arcade.StaticBody).top
     const feet = player.body.bottom
-    return feet <= top + 18 && feet >= top - 36
+    const prevFeet = player.body.prev.y + player.body.height
+    const crossed = prevFeet <= top + 10 && feet >= top - 8
+    const resting = Math.abs(feet - top) <= 18
+    return crossed || resting
   }
 
   private addFloor(x: number, y: number, w: number, h: number): void {
