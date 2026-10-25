@@ -130,7 +130,7 @@ export const LEVEL = {
   },
   workshop: {
     lensStep: { x: 2500, y: 568, w: 170, h: 20 },
-    lensShelf: { x: 2610, y: 450, w: 180, h: 20 },
+    lensShelf: { x: 2500, y: 450, w: 280, h: 20 },
     lensX: 2700,
     cogX: 2890,
     block: { x: 2820, y: FLOOR_Y - 64, w: 96, h: 64, minX: 2760, maxX: 3070 },
