@@ -36,11 +36,13 @@ export function drawBedroom(scene: Phaser.Scene): void {
   }
 
   // The book gap is a dip full of pillows, not an empty hole.
+  const gapL = LEVEL.book.leftFloor.x + LEVEL.book.leftFloor.w
+  const gapR = LEVEL.book.rightFloor.x
   g.fillStyle(0xf8d9c4, 1)
-  g.fillRect(520, FLOOR_Y, 280, 220)
+  g.fillRect(gapL, FLOOR_Y, gapR - gapL, 220)
   g.fillStyle(COLORS.floorDark, 0.35)
-  g.fillRect(520, FLOOR_Y, 8, 220)
-  g.fillRect(792, FLOOR_Y, 8, 220)
+  g.fillRect(gapL, FLOOR_Y, 8, 220)
+  g.fillRect(gapR - 8, FLOOR_Y, 8, 220)
 
   drawRug(g, 120, FLOOR_Y - 8, 260, 36)
   drawRug(g, 1288, FLOOR_Y - 8, 220, 36)
@@ -52,7 +54,7 @@ export function drawBedroom(scene: Phaser.Scene): void {
   ]
   for (const plaque of plaques) {
     const t = scene.add
-      .text(plaque.x, 150, plaque.text, {
+      .text(plaque.x, 248, plaque.text, {
         fontFamily: FONT,
         fontSize: '28px',
         color: '#241c16',
@@ -65,7 +67,7 @@ export function drawBedroom(scene: Phaser.Scene): void {
   }
 
   scene.add
-    .text(620, FLOOR_Y + 70, 'Soft landing', {
+    .text((LEVEL.book.leftFloor.w + LEVEL.book.rightFloor.x) / 2, FLOOR_Y + 70, 'Soft landing', {
       fontFamily: FONT,
       fontSize: '18px',
       color: '#6a3b42',

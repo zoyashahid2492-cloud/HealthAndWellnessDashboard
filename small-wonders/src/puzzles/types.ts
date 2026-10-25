@@ -5,6 +5,7 @@ export interface WorldApi {
   pip: Player
   pebble: Player
   addSolid: (rect: Phaser.GameObjects.Rectangle) => void
+  addLedge: (rect: Phaser.GameObjects.Rectangle) => void
   addBlock: (rect: Phaser.GameObjects.Rectangle) => void
   onRepaired: () => void
 }

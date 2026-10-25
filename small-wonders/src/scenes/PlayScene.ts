@@ -22,6 +22,7 @@ export class PlayScene extends Phaser.Scene {
   private elevator!: ElevatorPuzzle
   private workshop!: WorkshopPuzzle
   private solids: Phaser.GameObjects.Rectangle[] = []
+  private ledges: Phaser.GameObjects.Rectangle[] = []
   private blocks: Phaser.GameObjects.Rectangle[] = []
   private glow!: Phaser.GameObjects.Graphics
   private simPaused = false
@@ -38,6 +39,7 @@ export class PlayScene extends Phaser.Scene {
     this.endingT = 0
     this.simPaused = false
     this.solids = []
+    this.ledges = []
     this.blocks = []
     this.physics.world.gravity.y = CONFIG.physics.gravity
     this.cameras.main.setBackgroundColor('#f7e3c8')
@@ -67,6 +69,7 @@ export class PlayScene extends Phaser.Scene {
       pip: this.pip,
       pebble: this.pebble,
       addSolid: (rect) => this.solids.push(rect),
+      addLedge: (rect) => this.ledges.push(rect),
       addBlock: (rect) => this.blocks.push(rect),
       onRepaired: () => this.beginEnding(),
     }
@@ -79,6 +82,8 @@ export class PlayScene extends Phaser.Scene {
 
     this.physics.add.collider(this.pip.sprite, this.solids)
     this.physics.add.collider(this.pebble.sprite, this.solids)
+    this.physics.add.collider(this.pip.sprite, this.ledges, undefined, (_player, ledge) => this.landOnLedge(this.pip, ledge))
+    this.physics.add.collider(this.pebble.sprite, this.ledges, undefined, (_player, ledge) => this.landOnLedge(this.pebble, ledge))
     this.physics.add.collider(this.pip.sprite, this.blocks)
     this.physics.add.collider(this.pebble.sprite, this.blocks, undefined, () => !this.pebble.phasingBlock)
 
@@ -284,6 +289,15 @@ export class PlayScene extends Phaser.Scene {
     }
   }
 
+  /** Book-step ledges only catch feet coming down onto the top, so jumps are not snagged. */
+  private landOnLedge(player: Player, ledge: unknown): boolean {
+    if (player.body.velocity.y < -30) return false
+    const rect = ledge as Phaser.GameObjects.Rectangle
+    const top = (rect.body as Phaser.Physics.Arcade.StaticBody).top
+    const feet = player.body.bottom
+    return feet <= top + 18 && feet >= top - 36
+  }
+
   private addFloor(x: number, y: number, w: number, h: number): void {
     this.solids.push(makeSolid(this, x, y, w, h))
   }
@@ -291,6 +305,8 @@ export class PlayScene extends Phaser.Scene {
   private publish(): void {
     publishDebug(() => ({
       scene: 'play',
+      fps: Math.round(this.game.loop.actualFps),
+      delta: Math.round(this.game.loop.delta),
       paused: session.paused,
       complete: session.complete,
       objective: session.objective,

@@ -33,7 +33,7 @@ export class WorkshopPuzzle implements Puzzle {
     const socketStep = LAYOUT.socketStep
     const socket = LAYOUT.lensSocket
     for (const box of [step, shelf, socketStep, socket]) {
-      this.api.addSolid(makeSolid(scene, box.x, box.y, box.w, box.h))
+      this.api.addLedge(makeSolid(scene, box.x, box.y, box.w, box.h))
     }
     const b = LAYOUT.block
     this.block = createBlock(scene, b.x, b.y, b.w, b.h, b.minX, b.maxX)

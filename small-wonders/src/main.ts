@@ -9,6 +9,12 @@ import { TitleScene } from './scenes/TitleScene'
 const params = new URLSearchParams(window.location.search)
 
 const game = new Phaser.Game({
+  // Exposed so playtests can read the loop. Not used by the game itself.
+  callbacks: {
+    postBoot: (booted) => {
+      ;(window as unknown as { __GAME__?: Phaser.Game }).__GAME__ = booted
+    },
+  },
   type: Phaser.AUTO,
   parent: 'game',
   width: CONFIG.view.width,

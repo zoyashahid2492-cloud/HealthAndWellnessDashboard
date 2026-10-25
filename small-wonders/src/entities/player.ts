@@ -135,6 +135,10 @@ export class Player {
     this.body.setAllowGravity(true)
     this.body.updateFromGameObject()
     this.body.setVelocity(vx, vy)
+    // Physics postUpdate adds body.position - prevFrame onto the sprite.
+    // Sync those snapshots so a teleport is not applied twice.
+    this.body.prev.copy(this.body.position)
+    this.body.prevFrame.copy(this.body.position)
   }
 
   beginBridge(x: number, y: number): void {

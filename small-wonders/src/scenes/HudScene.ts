@@ -46,7 +46,7 @@ export class HudScene extends Phaser.Scene {
       .setOrigin(1, 0)
       .setDepth(4)
     this.toast = this.add
-      .text(VIEW.width / 2, 630, '', {
+      .text(VIEW.width / 2, 136, '', {
         ...textStyle(22),
         backgroundColor: COLORS.creamCss,
         padding: { x: 12, y: 6 },
