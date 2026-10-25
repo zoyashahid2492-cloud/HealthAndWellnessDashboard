@@ -80,6 +80,8 @@ export class ElevatorPuzzle implements Puzzle {
     }
     if (!this.block.locked && this.nearBlock(this.api.pip)) {
       this.api.pip.hintText = this.api.pip.hintText || 'Pebble can push this'
+    } else if (this.block.locked && this.nearBlock(this.api.pip)) {
+      this.api.pip.hintText = this.api.pip.hintText || 'Jump over'
     }
   }
 

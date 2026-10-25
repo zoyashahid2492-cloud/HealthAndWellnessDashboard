@@ -54,6 +54,7 @@ export class WorkshopPuzzle implements Puzzle {
     if (this.cogCovered() && this.nearBlock(this.api.pebble) && !this.api.pebble.input.abilityHeld) {
       this.api.pebble.hintText = this.api.pebble.hintText || 'Hold Enter to push'
     }
+    if (this.nearBlock(this.api.pip)) this.api.pip.hintText = this.api.pip.hintText || 'Jump over'
   }
 
   reset(): void {
