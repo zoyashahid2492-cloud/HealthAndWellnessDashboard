@@ -186,7 +186,7 @@ export class ElevatorPuzzle implements Puzzle {
   }
 
   private updateRideDown(dt: number): void {
-    if (this.phase !== 'top') {
+    if (this.phase !== 'top' || !this.doorOpen) {
       this.rideDown = 0
       return
     }
@@ -208,7 +208,9 @@ export class ElevatorPuzzle implements Puzzle {
         audio.click()
       }
     } else {
-      if (!rider.input.abilityHeld && !inRibbon) rider.hintText = rider.hintText || 'Hold your ability to ride down'
+      if (this.doorOpen && !rider.input.abilityHeld && !inRibbon) {
+        rider.hintText = rider.hintText || 'Hold your ability to ride down'
+      }
       this.rideDown = Math.max(0, this.rideDown - dt / 0.3)
     }
   }
@@ -277,13 +279,18 @@ export class ElevatorPuzzle implements Puzzle {
 
   private carryRiders(): void {
     if (this.phase === 'bottom') return
+    const lift = LAYOUT.lift
     for (const p of [this.api.pip, this.api.pebble]) {
       if (p.mode !== 'play' || p.body.velocity.y < -20) continue
-      if (!this.horizOnLift(p)) continue
-      if (Math.abs(p.y - this.liftY) <= 18) {
-        p.place(p.x, this.liftY, p.body.velocity.x, 0)
-        p.supported = true
-      }
+      // Scene update runs before the sprite receives this frame's physics move.
+      // Nudge the body, and let postUpdate carry that delta onto the sprite.
+      const x = p.body.x + p.body.width * 0.5
+      if (x <= lift.x + 6 || x >= lift.x + lift.w - 6) continue
+      const bottom = p.body.bottom
+      if (bottom < this.liftY - 18 || bottom > this.liftY + 24) continue
+      p.body.y += this.liftY - bottom
+      p.body.setVelocityY(0)
+      p.supported = true
     }
   }
 
