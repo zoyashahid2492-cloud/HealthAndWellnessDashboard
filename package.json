@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "dev": "vite"
+    "dev": "vite",
+    "game": "npm --prefix small-wonders run dev",
+    "game:build": "npm --prefix small-wonders run build",
+    "game:preview": "npm --prefix small-wonders run preview"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
