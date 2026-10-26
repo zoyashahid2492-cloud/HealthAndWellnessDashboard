@@ -137,7 +137,7 @@ export class PlayScene extends Phaser.Scene {
     this.checkpoints.update([this.pip, this.pebble])
     if (this.ending) {
       this.endingT += dt
-      if (this.endingT > 1.7) session.complete = true
+      if (this.endingT > 2.4) session.complete = true
     }
     this.updateObjective()
     this.updateCamera(dt)
@@ -259,15 +259,17 @@ export class PlayScene extends Phaser.Scene {
     const cam = this.cameras.main
     const midX = (this.pip.x + this.pebble.x) / 2
     const aimX = this.ending ? lerp(midX, LEVEL.workshop.fireflyX, Math.min(1, this.endingT / 1.2)) : midX
-    const focusY = clamp((this.pip.y + this.pebble.y) / 2 - 20, 440, 560)
+    const focusY = this.ending ? 470 : clamp((this.pip.y + this.pebble.y) / 2 - 20, 440, 560)
     const dist = Math.abs(this.pip.x - this.pebble.x)
-    const targetZoom = clamp(VIEW.width / (dist + CONFIG.camera.margin), CONFIG.camera.minZoom, 1)
+    const playZoom = clamp(VIEW.width / (dist + CONFIG.camera.margin), CONFIG.camera.minZoom, 1)
+    const targetZoom = this.ending ? 0.9 : playZoom
     const k = settings.reducedMotion ? 1 : Math.min(1, 7 * dt)
     const zoom = settings.reducedMotion ? targetZoom : lerp(cam.zoom, targetZoom, k)
     cam.setZoom(zoom)
     const halfW = VIEW.width / (2 * zoom)
     const halfH = VIEW.height / (2 * zoom)
-    const cx = clamp(aimX, halfW - 30, LEVEL.worldW - halfW + 30)
+    const rightPad = this.ending ? 220 : 30
+    const cx = clamp(aimX, halfW - 30, LEVEL.worldW - halfW + rightPad)
     const cy = clamp(focusY, halfH - 20, 760 - halfH)
     const scrollX = cx - halfW
     const scrollY = cy - halfH
@@ -281,12 +283,27 @@ export class PlayScene extends Phaser.Scene {
     this.workshop.paint(time)
     this.pip.paint(time)
     this.pebble.paint(time)
+    this.separateLabels()
     this.glow.clear()
-    const amount = Math.max(this.workshop.glowAmount(), this.ending ? Math.min(1, this.endingT / 1.3) : 0)
+    const amount = Math.max(this.workshop.glowAmount(), this.ending ? Math.min(1, this.endingT / 1.1) : 0)
     if (amount > 0) {
-      this.glow.fillStyle(COLORS.glow, 0.05 + amount * 0.16)
+      this.glow.fillStyle(COLORS.glow, 0.04 + amount * 0.2)
       this.glow.fillRect(-200, -200, LEVEL.worldW + 400, 1200)
+      this.glow.fillStyle(COLORS.glow, 0.22 * amount)
+      this.glow.fillCircle(LEVEL.workshop.fireflyX, FLOOR_Y - 310, 90 + amount * 70)
+      for (const x of [430, 1680, 3000]) {
+        this.glow.fillStyle(0xfff6d0, 0.35 * amount)
+        this.glow.fillRoundedRect(x, 70, 180, 140, 8)
+      }
     }
+  }
+
+  private separateLabels(): void {
+    if (Math.abs(this.pip.x - this.pebble.x) > 88 || Math.abs(this.pip.y - this.pebble.y) > 40) return
+    this.pip.label.x -= 28
+    this.pebble.label.x += 28
+    if (this.pip.hint.visible) this.pip.hint.x -= 28
+    if (this.pebble.hint.visible) this.pebble.hint.x += 28
   }
 
   /** Shelves catch feet that cross the top on the way down, including a long frame. */

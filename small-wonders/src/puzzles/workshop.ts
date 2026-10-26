@@ -247,11 +247,12 @@ export class WorkshopPuzzle implements Puzzle {
     this.drawBlock()
     if (!this.lensTaken) paintLens(g, LAYOUT.lensX, LAYOUT.lensShelf.y - 22, 1.3)
     if (!this.cogTaken && !this.cogCovered()) paintCog(g, LAYOUT.cogX, FLOOR_Y - 28, 1.4)
-    paintFirefly(g, LAYOUT.fireflyX, FLOOR_Y - 168, this.glowAmount(), this.done, time / 1000, settings.reducedMotion)
+    const flyY = FLOOR_Y - 310
+    paintFirefly(g, LAYOUT.fireflyX, flyY, this.glowAmount(), this.done, time / 1000, settings.reducedMotion)
     this.drawSocket(LAYOUT.cogSocketX, FLOOR_Y - 8, 'cog', this.cogIn)
     this.drawSocket(LAYOUT.lensSocketX, LAYOUT.lensSocket.y - 8, 'lens', this.lensIn)
     if (this.lensIn && this.cogIn && !this.done) {
-      meter(g, LAYOUT.fireflyX, FLOOR_Y - 250, this.progress)
+      meter(g, LAYOUT.fireflyX, flyY - 96, this.progress)
     }
   }
 

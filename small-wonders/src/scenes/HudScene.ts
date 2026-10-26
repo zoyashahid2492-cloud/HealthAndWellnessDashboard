@@ -100,16 +100,16 @@ export class HudScene extends Phaser.Scene {
     this.confirmButtons.forEach((button) => button.setVisible(false))
 
     this.completeTitle = this.add
-      .text(VIEW.width / 2, 250, 'The firefly is glowing', textStyle(48, COLORS.inkCss))
+      .text(VIEW.width / 2, 548, 'The firefly is glowing', textStyle(42, COLORS.inkCss))
       .setOrigin(0.5)
       .setDepth(12)
       .setVisible(false)
     this.completeBody = this.add
-      .text(VIEW.width / 2, 320, 'You mended it together.', textStyle(28, '#5c4636', false))
+      .text(VIEW.width / 2, 598, 'You mended it together.', textStyle(26, '#5c4636', false))
       .setOrigin(0.5)
       .setDepth(12)
       .setVisible(false)
-    this.replayButton = new Button(this, VIEW.width / 2, 430, 360, 76, 'Replay', () => {
+    this.replayButton = new Button(this, VIEW.width / 2, 662, 320, 64, 'Replay', () => {
       session.requestReplay = true
     }, 12)
     this.replayButton.setVisible(false)
@@ -153,6 +153,7 @@ export class HudScene extends Phaser.Scene {
   private drawBar(): void {
     const g = this.bar
     g.clear()
+    if (session.complete) return
     g.fillStyle(COLORS.cream, 0.94)
     g.fillRoundedRect(16, 8, VIEW.width - 32, 108, 16)
     g.lineStyle(3, COLORS.ink, 0.25)
@@ -173,13 +174,16 @@ export class HudScene extends Phaser.Scene {
     const g = this.overlay
     g.clear()
     if (!session.paused && !session.complete) return
+    if (session.complete) {
+      g.fillStyle(COLORS.cream, 0.96)
+      g.fillRoundedRect(300, 512, 680, 188, 24)
+      g.lineStyle(4, COLORS.ink, 0.2)
+      g.strokeRoundedRect(300, 512, 680, 188, 24)
+      return
+    }
     g.fillStyle(0x2a211c, 0.46)
     g.fillRect(0, 0, VIEW.width, VIEW.height)
     g.fillStyle(COLORS.cream, 1)
-    if (session.complete) {
-      g.fillRoundedRect(280, 180, 720, 340, 24)
-      return
-    }
     if (session.confirmRestart) {
       g.fillRoundedRect(250, 200, 780, 320, 24)
       return
